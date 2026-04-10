@@ -1,11 +1,10 @@
-
 services:
   db:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postegres
+      POSTGRES_PASSWORD: postegres
       POSTGRES_DB: imagelite
     ports:
       - '5432:5432'
