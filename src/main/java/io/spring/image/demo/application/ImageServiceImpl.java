@@ -16,5 +16,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public Image save(Image image) {return null; }
+    public Image save(Image image){
+        return  repository.save(image);
+    }
 }
