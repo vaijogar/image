@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.springframework.http.MediaType;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -31,6 +33,7 @@ public class ImagesController {
     //*
 
     private final ImageService service;
+    private final ImageMapper mapper;
     @PostMapping
     public ResponseEntity save(@RequestParam("file")  MultipartFile file,
                                       @RequestParam("name")String name,
@@ -39,6 +42,14 @@ public class ImagesController {
         log.info("Recebendo tentativa de upload do arquivo: {}", file.getOriginalFilename());
         log.info("Content Type:{} ", file.getContentType());
         log.info("Media Type:{} ", MediaType.valueOf(file.getContentType()));
+        Image image = mapper.mapToImage(file, name, tags);
+        Image savedImage = service.save(image);
+        URI imageUri = buildImageURL(savedImage);
+        //http://localhost:8080/upload/asfsdfsfg01012;  url
+
+        //return ResponseEntity.ok().build();
+        return ResponseEntity.created(imageUri).build();
+    }
         /*
         try {
             // Lógica de processamento...
@@ -58,8 +69,8 @@ public class ImagesController {
             log.error("Falha crítica ao processar imagem: ", e);
             return ResponseEntity.internalServerError().body("Erro no servidor");
         }
-        */
-        Image image = Image.builder()
+
+         Image image = Image.builder()
                 .name(name)
                 .tags(String.join(",", tags)) // ["tag1, "tag2"] -> "tag1, tag2"
                 .size(file.getSize())
@@ -68,5 +79,14 @@ public class ImagesController {
                 .build();
         service.save(image);
         return ResponseEntity.ok().build();
-    }
+         */
+
+        //método que cria a url da imagem
+        private URI buildImageURL(Image image) {
+            String imagePath = "/"+image.getId();
+            return ServletUriComponentsBuilder
+                    .fromCurrentRequestUri()
+                    .path(imagePath)
+                    .build().toUri();
+        }
 }
