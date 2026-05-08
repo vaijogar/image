@@ -1,5 +1,6 @@
 package io.spring.image.demo.domain.enums;
 
+import lombok.Getter;
 import org.springframework.http.MediaType;
 
 import java.util.Arrays;
@@ -11,6 +12,7 @@ public enum ImageExtension {
    // JPEG,
    // WebP,
 
+    @Getter
     private MediaType mediaType;
 
     ImageExtension(MediaType mediaType)
