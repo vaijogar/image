@@ -1,12 +1,15 @@
 package io.spring.image.demo.domain.enums;
 
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.http.MediaType;
 
 import java.util.Arrays;
 
+@Getter
 public enum ImageExtension {
     PNG(MediaType.IMAGE_PNG),
+    JPEG(MediaType.IMAGE_JPEG),
     JPG(MediaType.IMAGE_JPEG),
     GIF(MediaType.IMAGE_GIF);
    // JPEG,
@@ -20,9 +23,17 @@ public enum ImageExtension {
         this.mediaType = mediaType;
     }
 
+
     public static ImageExtension valueOf(MediaType mediaType){
         return Arrays.stream(values())
                 .filter(ie-> ie.mediaType.equals(mediaType)).findFirst().orElse(null);
+    }
+
+    public static ImageExtension ofName(String name){
+        return Arrays.stream(values())
+                .filter(ie-> ie.name().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 }
 
